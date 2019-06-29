@@ -1,0 +1,34 @@
+{
+  "name": "swoft-project/basic-template",
+  "type": "library",
+  "keywords": [
+    "php",
+    "swoole",
+    "swoft"
+  ],
+  "description": "basic template generate for swoft framework",
+  "license": "Apache-2.0",
+  "require": {
+    "php": ">7.1",
+    "swoft/stdlib": "~2.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SwoftProject\\BasicTemplate\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.5"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SwoftProject\\BasicTemplate\\Unit\\": "test/unit/",
+      "SwoftProject\\BasicTemplate\\Testing\\": "test/testing/"
+    }
+  },
+  "repositories": {
+  },
+  "scripts": {
+    "test": "./vendor/bin/phpunit -c phpunit.xml"
+  }
+}
