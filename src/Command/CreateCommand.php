@@ -11,12 +11,18 @@ use Swoft\Console\Input\Input;
 /**
  * Class CreateCommand
  *
- * @Command(desc="Privide some commads for quick create applicat or component[<mga>WIP</mga>]")
+ * @Command(desc="Privide some commads for quick create new application or component[<mga>WIP</mga>]")
  */
 class CreateCommand
 {
     /**
-     * @CommandMapping()
+     * quick crate an new swoft application project
+     *
+     * @CommandMapping("app", alias="a")
+     * @CommandOption(
+     *  "type", type="string", default="http",
+     *  desc="the crate new application project type. allow: http, ws, tcp, rpc, all"
+     * )
      * @param Input $input
      */
     public function app(Input $input): void
@@ -25,7 +31,9 @@ class CreateCommand
     }
 
     /**
-     * @CommandMapping(alias="cpt")
+     * quick crate an new swoft component project
+     *
+     * @CommandMapping(alias="c,cpt")
      * @param Input $input
      */
     public function component(Input $input): void
