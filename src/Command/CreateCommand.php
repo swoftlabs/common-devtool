@@ -5,13 +5,15 @@ namespace SwoftProject\BasicTemplate\Command;
 use Swoft;
 use Swoft\Console\Annotation\Mapping\Command;
 use Swoft\Console\Annotation\Mapping\CommandMapping;
+use Swoft\Console\Annotation\Mapping\CommandOption;
+use Swoft\Console\Annotation\Mapping\CommandArgument;
 use Swoft\Console\Helper\Show;
 use Swoft\Console\Input\Input;
 
 /**
  * Class CreateCommand
  *
- * @Command(desc="Privide some commads for quick create new application or component[<mga>WIP</mga>]")
+ * @Command(alias="new", desc="Privide some commads for quick create new application or component")
  */
 class CreateCommand
 {
