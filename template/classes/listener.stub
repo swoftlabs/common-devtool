@@ -2,16 +2,14 @@
 {include file="file-header.stub"}
 namespace {= namespace};
 
-use Swoft\Bean\Annotation\Listener;
+use Swoft\Event\Annotation\Mapping\Listener;
 use Swoft\Event\EventHandlerInterface;
 use Swoft\Event\EventInterface;
-use Swoft\Task\Event\TaskEvent;
 
 /**
  * Class {= className} - event handler
  *
- * @Listener(TaskEvent::FINISH_TASK)
- * @package {= namespace}
+ * @Listener(EVENT_NAME)
  */
 class {= className} implements EventHandlerInterface
 {
@@ -20,6 +18,6 @@ class {= className} implements EventHandlerInterface
      */
     public function handle(EventInterface $event)
     {
-        var_dump('task finish! ', $event->getParams());
+        var_dump('evnet params:', $event->getParams());
     }
 }

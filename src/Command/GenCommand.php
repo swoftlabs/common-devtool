@@ -30,7 +30,7 @@ use const JSON_UNESCAPED_SLASHES;
  * @CommandOption("yes", short="y", desc="No need to confirm when performing file writing", default=false, type="bool")
  * @CommandOption("override", short="o", desc="Force override exists file", default=false, type="bool")
  * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Command")
- * @CommandOption("tpl-dir", type="string", desc="The class namespace", default="built-in")
+ * @CommandOption("tpl-dir", type="string", desc="The template files directory")
  */
 class GenCommand
 {
@@ -41,7 +41,7 @@ class GenCommand
 
     public function init(): void
     {
-        $this->defaultTplPath = dirname(__DIR__, 2) . '/res/templates/';
+        $this->defaultTplPath = dirname(__DIR__, 2) . '/template/classes/';
     }
 
     /**
@@ -74,7 +74,7 @@ class GenCommand
 
         $data['commandVar'] = '{command}';
 
-        return $this->writeFile('@app/Commands', $data, $config, $out);
+        return $this->writeFile('@app/Command', $data, $config, $out);
     }
 
     /**
@@ -85,10 +85,11 @@ class GenCommand
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Http/Controller")
      *
-     * @CommandOption("rest", type="string", desc="The class will contains CURD actions", default=false)
+     * @CommandOption("rest", type="string", desc="The class will contains CURD actions", default=true)
      * @CommandOption("prefix", type="string", desc="The route prefix for the controller, default is class name", default="string")
-     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Command")
-     * @CommandOption("tpl-file", type="string", desc="The template file dir path", default="command.stub")
+     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Controller")
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Http\Controller")
+     * @CommandOption("tpl-file", type="string", desc="The template file dir path", default="controler-rest.stub")
      *
      * @param Input  $in
      * @param Output $out
@@ -115,11 +116,11 @@ class GenCommand
         $data['prefix'] = $in->getOpt('prefix') ?: '/' . $data['name'];
         $data['idVar']  = '{id}';
 
-        if ($in->getOpt('rest', false)) {
+        if ($in->getOpt('rest', true)) {
             $config['tplFilename'] = 'controller-rest';
         }
 
-        return $this->writeFile('@app/Controller', $data, $config, $out);
+        return $this->writeFile('@app/Http/Controller', $data, $config, $out);
     }
 
     /**
@@ -149,13 +150,13 @@ class GenCommand
     {
         [$config, $data] = $this->collectInfo($in, $out, [
             'suffix'      => 'Controller',
-            'namespace'   => 'App\\WebSocket',
+            'namespace'   => 'App\\WebSocket\\Controller',
             'tplFilename' => 'ws-controller',
         ]);
 
         $data['prefix'] = $in->getOpt('prefix') ?: '/' . $data['name'];
 
-        return $this->writeFile('@app/WebSocket', $data, $config, $out);
+        return $this->writeFile('@app/WebSocket/Controller', $data, $config, $out);
     }
 
     /**
@@ -228,7 +229,7 @@ class GenCommand
             'tplFilename' => 'middleware',
         ]);
 
-        return $this->writeFile('@app/Middleware', $data, $config, $out);
+        return $this->writeFile('@app/Http/Middleware', $data, $config, $out);
     }
 
     /**
@@ -377,7 +378,6 @@ class GenCommand
         }
 
         $ger = new FileGenerator($config);
-
         if ($ok = $ger->renderAs($file, $data)) {
             $out->writeln('<success>OK, write successful!</success>');
         } else {
