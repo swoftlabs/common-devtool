@@ -1,5 +1,5 @@
 {
-  "name": "swoft-project/basic-template",
+  "name": "swoftlabs/common-devtool",
   "type": "library",
   "keywords": [
     "php",
@@ -11,11 +11,11 @@
   "require": {
     "php": ">7.1",
     "swoft/stdlib": "~2.0.0",
-    "text/template": "~2.3"
+    "text/template": "~2.6"
   },
   "autoload": {
     "psr-4": {
-      "SwoftProject\\BasicTemplate\\": "src/"
+      "SwoftLabs\\Devtool\\": "src/"
     }
   },
   "require-dev": {
