@@ -23,6 +23,8 @@ use function trim;
  * coroutine=true,
  * desc="Privide some commads for quick create new application or component"
  * )
+ *
+ * @CommandOption("yes", short="y", desc="whether need to confirm operation", default=false, type="bool")
  */
 class CreateCommand
 {
@@ -61,10 +63,11 @@ class CreateCommand
             return;
         }
 
+        $yes = $input->sameOpt(['y', 'yes'], false);
         $output->aList($pcr->getInfo(), 'information');
 
         if (file_exists($path = $pcr->getProjectPath())) {
-            if (!$output->confirm('project has been exist! delete it', false)) {
+            if (!$yes && !$output->confirm('project has been exist! delete it', false)) {
                 $output->colored('GoodBye!');
                 return;
             }
@@ -75,7 +78,7 @@ class CreateCommand
             }
         }
 
-        if (!$output->confirm('ensure create application')) {
+        if (!$yes && !$output->confirm('ensure create application')) {
             $output->colored('GoodBye!');
             return;
         }
@@ -94,10 +97,33 @@ class CreateCommand
      * quick crate an new swoft component project
      *
      * @CommandMapping(alias="c,cpt")
+     *
+     * @CommandOption(
+     *  "output", short="o", type="string",
+     *  desc="the output dir for new component, default is crate at current dir"
+     * )
+     * @CommandOption("no-license", desc="dont add the apache license file", default=false, type="bool")
+     * @CommandArgument("name", type="string", desc="the new component project name", mode=Command::ARG_REQUIRED)
+     *
      * @param Input $input
+     * @param Output $output
      */
-    public function component(Input $input): void
+    public function component(Input $input, Output $output): void
     {
-        Show::info('WIP');
+        $workDir = $input->getWorkDir();
+
+        $info = [
+            'name'      => $input->getString('name'),
+            'output'    => $input->getStringOpt('output') ?: $workDir,
+            'noLicense' => $input->getBoolOpt('no-license'),
+        ];
+
+        // $cmdId  = $input->getCommandId();
+        // $config = bean('cliApp')->get('commands');
+        // if (isset($config[$cmdId])) {
+        // }
+
+        $output->aList($info, 'information');
+        $output->colored('WIP ...');
     }
 }

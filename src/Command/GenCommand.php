@@ -29,7 +29,6 @@ use const JSON_UNESCAPED_SLASHES;
  * @Command(alias="generate", coroutine=false)
  *
  * @CommandOption("yes", short="y", desc="No need to confirm when performing file writing", default=false, type="bool")
- * @CommandOption("override", short="o", desc="Force override exists file", default=false, type="bool")
  * @CommandOption("tpl-dir", type="string", desc="The template files directory")
  */
 class GenCommand
@@ -219,7 +218,7 @@ class GenCommand
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Listener")
      *
      * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Listener")
-     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Command")
+     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Listener")
      * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="listener.stub")
      * @param Input  $in
      * @param Output $out
@@ -386,10 +385,12 @@ class GenCommand
      */
     private function writeFile(string $defaultDir, array $data, array $config, Output $out): int
     {
-        $info = array_merge($config, $data);
+        $info = $data;
         if (isset($info['id'])) {
             unset($info['id']);
         }
+
+        $info['tplFilename'] = $config['tplFilename'];
 
         // $out->writeln("Some Info: \n" . \json_encode($config, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
         $out->writeln("Metadata: \n" . json_encode($info, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
@@ -399,31 +400,21 @@ class GenCommand
         }
 
         $realpath = Str::rmPharPrefix(Swoft::getAlias($saveDir));
+
         $file = $realpath . '/' . $data['className'] . '.php';
+        $yes = \input()->sameOpt(['y', 'yes'], false);
 
         $out->writeln("Target File: <info>$file</info>\n");
 
         if (file_exists($file)) {
-            $override = \input()->sameOpt(['o', 'override']);
-
-            if (null === $override) {
-                if (!Interact::confirm('Target file has been exists, override?', false)) {
-                    $out->writeln(' Quit, Bye!');
-
-                    return 0;
-                }
-            } elseif (!$override) {
-                $out->writeln(' Quit, Bye!');
-
+            if (!$yes && !Interact::confirm('Target file has been exists, override it?', false)) {
+                $out->colored('Quit, Bye!');
                 return 0;
             }
         }
 
-        $yes = \input()->sameOpt(['y', 'yes'], false);
-
         if (!$yes && !Interact::confirm('Now, will write content to file, ensure continue?')) {
-            $out->writeln(' Quit, Bye!');
-
+            $out->colored('Quit, Bye!');
             return 0;
         }
 
