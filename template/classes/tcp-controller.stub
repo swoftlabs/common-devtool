@@ -1,0 +1,36 @@
+<?php declare(strict_types=1);
+{include file="file-header.stub"}
+namespace {= namespace};
+
+use Swoft\Tcp\Server\Annotation\Mapping\TcpController;
+use Swoft\Tcp\Server\Annotation\Mapping\TcpMapping;
+use Swoft\Tcp\Server\Request;
+use Swoft\Tcp\Server\Response;
+
+/**
+ * Class {= className} - This is an controller for handle tcp message request
+ * @TcpController("{= prefix}")
+ */
+class {= className}
+{
+    /**
+     * @TcpMapping("list", root=true)
+     * @param Response $response
+     */
+    public function list(Response $response): void
+    {
+        $response->setData('[list]allow command: list, echo, demo.echo');
+    }
+
+    /**
+     * @TcpMapping("echo")
+     * @param Request  $request
+     * @param Response $response
+     */
+    public function index(Request $request, Response $response): void
+    {
+        $str = $request->getPackage()->getDataString();
+
+        $response->setData('[demo.echo]hi, we received your message: ' . $str);
+    }
+}

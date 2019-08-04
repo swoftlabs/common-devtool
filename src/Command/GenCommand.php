@@ -13,6 +13,7 @@ use Swoft\Console\Annotation\Mapping\CommandOption;
 use Swoft\Console\Helper\Interact;
 use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
+use Swoft\Stdlib\Helper\Str;
 use SwoftLabs\Devtool\FileGenerator;
 use function bean;
 use function dirname;
@@ -25,11 +26,10 @@ use const JSON_UNESCAPED_SLASHES;
 /**
  * Generate some common application template classes
  *
- * @Command(alias="generate")
+ * @Command(alias="generate", coroutine=false)
  *
  * @CommandOption("yes", short="y", desc="No need to confirm when performing file writing", default=false, type="bool")
  * @CommandOption("override", short="o", desc="Force override exists file", default=false, type="bool")
- * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Command")
  * @CommandOption("tpl-dir", type="string", desc="The template files directory")
  */
 class GenCommand
@@ -52,8 +52,9 @@ class GenCommand
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Command")
      *
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Command")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Command")
-     * @CommandOption("tpl-file", type="string", desc="The template file dir path", default="command.stub")
+     * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="command.stub")
      * @param Input  $in
      * @param Output $out
      *
@@ -74,7 +75,7 @@ class GenCommand
 
         $data['commandVar'] = '{command}';
 
-        return $this->writeFile('@app/Command', $data, $config, $out);
+        return $this->writeFile('app/Command', $data, $config, $out);
     }
 
     /**
@@ -89,7 +90,7 @@ class GenCommand
      * @CommandOption("prefix", type="string", desc="The route prefix for the controller, default is class name", default="string")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Controller")
      * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Http\Controller")
-     * @CommandOption("tpl-file", type="string", desc="The template file dir path", default="controler-rest.stub")
+     * @CommandOption("tpl-file", type="string", desc="The template file filename or full path", default="controler-rest.stub")
      *
      * @param Input  $in
      * @param Output $out
@@ -120,19 +121,20 @@ class GenCommand
             $config['tplFilename'] = 'controller-rest';
         }
 
-        return $this->writeFile('@app/Http/Controller', $data, $config, $out);
+        return $this->writeFile('app/Http/Controller', $data, $config, $out);
     }
 
     /**
-     * Generate WebSocket module/controller class
-     * @CommandMapping(alias="ws")
+     * Generate WebSocket module class
+     * @CommandMapping(alias="wsm")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket")
      *
-     * @CommandOption("prefix", type="string", desc="The route prefix for the websocket, default is class name", default="string")
-     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Command")
-     * @CommandOption("tpl-file", type="string", desc="The template file dir path", default="ws-module.stub")
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\WebSocket")
+     * @CommandOption("prefix", type="string", desc="The route prefix for the websocket, default is class name")
+     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Controller")
+     * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="ws-module.stub")
      * @param Input  $in
      * @param Output $out
      *
@@ -142,11 +144,48 @@ class GenCommand
      * @throws InvalidArgumentException
      * @throws TemplateParsingException
      * @example
-     * <info>{fullCommand} echo --prefix /echo -y</info>   Gen EchoController class to WebSocket dir
-     * <info>{fullCommand} chat --prefix /chat</info>      Gen ChatController class to WebSocket dir
+     * <info>{fullCommand} echo --prefix /echo -y</info>   Gen EchoModule class to WebSocket dir
+     * <info>{fullCommand} chat --prefix /chat</info>      Gen ChatModule class to WebSocket dir
      *
      */
-    public function websocket(Input $in, Output $out): int
+    public function wsModule(Input $in, Output $out): int
+    {
+        [$config, $data] = $this->collectInfo($in, $out, [
+            'suffix'      => 'Module',
+            'namespace'   => 'App\\WebSocket',
+            'tplFilename' => 'ws-module',
+        ]);
+
+        $data['prefix'] = $in->getOpt('prefix') ?: '/' . $data['name'];
+
+        return $this->writeFile('app/WebSocket', $data, $config, $out);
+    }
+
+    /**
+     * Generate WebSocket module/controller class
+     * @CommandMapping("ws-controller", alias="wsc")
+     *
+     * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
+     * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket/Controller")
+     *
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\WebSocket\Controller")
+     * @CommandOption("prefix", type="string", desc="The route prefix for the websocket, default is class name")
+     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Controller")
+     * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="ws-controller.stub")
+     * @param Input  $in
+     * @param Output $out
+     *
+     * @return int
+     * @return int
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
+     * @throws TemplateParsingException
+     * @example
+     * <info>{fullCommand} echo --prefix /echo -y</info>   Gen EchoController class to WebSocket controller dir
+     * <info>{fullCommand} chat --prefix /chat</info>      Gen ChatController class to WebSocket controller dir
+     *
+     */
+    public function wsController(Input $in, Output $out): int
     {
         [$config, $data] = $this->collectInfo($in, $out, [
             'suffix'      => 'Controller',
@@ -156,13 +195,14 @@ class GenCommand
 
         $data['prefix'] = $in->getOpt('prefix') ?: '/' . $data['name'];
 
-        return $this->writeFile('@app/WebSocket/Controller', $data, $config, $out);
+        return $this->writeFile('app/WebSocket/Controller', $data, $config, $out);
     }
 
     /**
      * Generate RPC service class
      * @CommandMapping(alias="rpc-ctrl")
      *
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Rpc\Service")
      * @return int
      */
     public function rpcController(): int
@@ -178,8 +218,9 @@ class GenCommand
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Listener")
      *
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Listener")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Command")
-     * @CommandOption("tpl-file", type="string", desc="The template file dir path", default="listener.stub")
+     * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="listener.stub")
      * @param Input  $in
      * @param Output $out
      *
@@ -198,18 +239,19 @@ class GenCommand
             'tplFilename' => 'listener',
         ]);
 
-        return $this->writeFile('@app/Listener', $data, $config, $out);
+        return $this->writeFile('app/Listener', $data, $config, $out);
     }
 
     /**
      * Generate HTTP middleware class
-     * @CommandMapping(alias="middle")
+     * @CommandMapping(alias="mdl, middle")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Middleware")
      *
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Http\Middleware")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Middleware")
-     * @CommandOption("tpl-file", type="string", desc="The template file dir path", default="middleware.stub")
+     * @CommandOption("tpl-file", type="string", desc="The template filename", default="middleware.stub")
      * @param Input  $in
      * @param Output $out
      *
@@ -229,7 +271,7 @@ class GenCommand
             'tplFilename' => 'middleware',
         ]);
 
-        return $this->writeFile('@app/Http/Middleware', $data, $config, $out);
+        return $this->writeFile('app/Http/Middleware', $data, $config, $out);
     }
 
     /**
@@ -239,8 +281,9 @@ class GenCommand
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Task")
      *
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Task")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Task")
-     * @CommandOption("tpl-file", type="string", desc="The template file dir path", default="task.stub")
+     * @CommandOption("tpl-file", type="string", desc="The template filename", default="task.stub")
      * @param Input  $in
      * @param Output $out
      *
@@ -260,7 +303,7 @@ class GenCommand
             'tplFilename' => 'task',
         ]);
 
-        return $this->writeFile('@app/Task', $data, $config, $out);
+        return $this->writeFile('app/Task', $data, $config, $out);
     }
 
     /**
@@ -271,8 +314,9 @@ class GenCommand
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Process")
      *
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Process")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Process")
-     * @CommandOption("tpl-file", type="string", desc="The template file dir path", default="process.stub")
+     * @CommandOption("tpl-file", type="string", desc="The template filename", default="process.stub")
      *
      * @param Input  $in
      * @param Output $out
@@ -293,7 +337,7 @@ class GenCommand
             'tplFilename' => 'process',
         ]);
 
-        return $this->writeFile('@app/Process', $data, $config, $out);
+        return $this->writeFile('app/Process', $data, $config, $out);
     }
 
     /**
@@ -342,14 +386,20 @@ class GenCommand
      */
     private function writeFile(string $defaultDir, array $data, array $config, Output $out): int
     {
+        $info = array_merge($config, $data);
+        if (isset($info['id'])) {
+            unset($info['id']);
+        }
+
         // $out->writeln("Some Info: \n" . \json_encode($config, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
-        $out->writeln("Class data: \n" . json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $out->writeln("Metadata: \n" . json_encode($info, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         if (!$saveDir = \input()->getArg(1)) {
             $saveDir = $defaultDir;
         }
 
-        $file = Swoft::getAlias($saveDir) . '/' . $data['className'] . '.php';
+        $realpath = Str::rmPharPrefix(Swoft::getAlias($saveDir));
+        $file = $realpath . '/' . $data['className'] . '.php';
 
         $out->writeln("Target File: <info>$file</info>\n");
 

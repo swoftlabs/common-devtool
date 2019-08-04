@@ -7,15 +7,18 @@ use Leuffen\TextTemplate\TemplateParsingException;
 use Leuffen\TextTemplate\TextTemplate;
 use RuntimeException;
 use Swoft;
+use Swoft\Stdlib\Helper\Dir;
 use function array_merge;
 use function dirname;
 use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
+use function is_dir;
 use function method_exists;
 use function property_exists;
 use function realpath;
 use function rtrim;
+use function str_replace;
 use function trim;
 use function ucfirst;
 
@@ -84,7 +87,11 @@ class FileGenerator
                 $partFile = Swoft::getAlias($partFile);
             } elseif ($firstChar !== '/') {
                 $relativePath = dirname($this->getTplFile());
-                $partFile     = realpath($relativePath . '/' . $partFile);
+                $partFile = $relativePath . '/' . $partFile;
+            }
+
+            if (!file_exists($partFile)) {
+                throw new InvalidArgumentException("The part file: $partFile is not exist!");
             }
 
             return PHP_EOL . file_get_contents($partFile);
@@ -149,9 +156,9 @@ class FileGenerator
         }
 
         $tplFile = $this->getTplFile();
-        $text    = $this->parser->loadTemplate(file_get_contents($tplFile))->apply($this->data);
+        $content = $this->parser->loadTemplate(file_get_contents($tplFile))->apply($this->data);
 
-        return $text;
+        return $content;
     }
 
     /**
@@ -169,9 +176,14 @@ class FileGenerator
         }
 
         $tplFile = $this->getTplFile();
-        $text    = $this->parser->loadTemplate(file_get_contents($tplFile))->apply($this->data);
+        $content = $this->parser->loadTemplate(file_get_contents($tplFile))->apply($this->data);
 
-        return file_put_contents($file, $text) > 0;
+        $dir = dirname($file);
+        if (!is_dir($dir)) {
+            Dir::make($dir);
+        }
+
+        return file_put_contents($file, $content) > 0;
     }
 
     /**
@@ -239,7 +251,7 @@ class FileGenerator
      */
     public function setTplFilename(string $tplFilename): self
     {
-        $this->tplFilename = $tplFilename;
+        $this->tplFilename = str_replace($this->tplExt, '', $tplFilename);
 
         return $this;
     }

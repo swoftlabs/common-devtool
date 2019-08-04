@@ -7,18 +7,14 @@ use Swoft\Http\Message\Response;
 use Swoft\WebSocket\Server\Annotation\Mapping\WsModule;
 use Swoft\WebSocket\Server\Annotation\Mapping\OnOpen;
 use Swoft\WebSocket\Server\Annotation\Mapping\OnClose;
+use Swoft\WebSocket\Server\Annotation\Mapping\OnMessage;
 use Swoft\WebSocket\Server\Annotation\Mapping\OnHandShake;
-use Swoft\WebSocket\Server\MessageParser\JsonParser;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
 
 /**
- * Class {= className} - This is an module for handle websocket
- * @WsModule(
- *    "{= path}"
- *     messageParser=JsonParser::class,
- *     controllers={}
- *  )
+ * Class {= className} - This is an module for handle websocket, use custom message dispatch.
+ * @WsModule("{= path}")
  */
 class {= className}
 {
@@ -54,6 +50,17 @@ class {= className}
     public function onOpen(Server $server, Request $request, int $fd)
     {
         // $server->push($fd, 'hello, welcome! :)');
+    }
+
+    /**
+     * @OnMessage()
+     * @param Server $server
+     * @param Frame $frame
+     * @return mixed
+     */
+    public function onMessage(Server $server, Frame $frame)
+    {
+        // $server->push($frame->fd, 'hello, I have received your message: ' . $frame->data);
     }
 
     /**
