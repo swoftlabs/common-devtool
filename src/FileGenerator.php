@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SwoftProject\BasicTemplate;
+namespace SwoftLabs\Devtool;
 
 use InvalidArgumentException;
 use Leuffen\TextTemplate\TemplateParsingException;

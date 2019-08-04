@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SwoftProject\BasicTemplate\Command;
+namespace SwoftLabs\Devtool\Command;
 
 use Swoft;
 use Swoft\Console\Annotation\Mapping\Command;
@@ -11,7 +11,7 @@ use Swoft\Console\Helper\Show;
 use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
 use Swoft\Stdlib\Helper\Sys;
-use SwoftProject\BasicTemplate\ProjectCreator;
+use SwoftLabs\Devtool\ProjectCreator;
 use Swoole\Coroutine;
 use function trim;
 

@@ -23,8 +23,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "SwoftProject\\BasicTemplate\\Unit\\": "test/unit/",
-      "SwoftProject\\BasicTemplate\\Testing\\": "test/testing/"
+      "SwoftLabs\\Devtool\\Unit\\": "test/unit/",
+      "SwoftLabs\\Devtool\\Testing\\": "test/testing/"
     }
   },
   "repositories": {

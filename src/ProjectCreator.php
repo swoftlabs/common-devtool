@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SwoftProject\BasicTemplate;
+namespace SwoftLabs\Devtool;
 
 use Swoft\Stdlib\Helper\ObjectHelper;
 use Swoft\Stdlib\Helper\Dir;

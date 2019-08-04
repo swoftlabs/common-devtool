@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SwoftProject\BasicTemplate\Command;
+namespace SwoftLabs\Devtool\Command;
 
 use InvalidArgumentException;
 use Leuffen\TextTemplate\TemplateParsingException;
@@ -13,7 +13,7 @@ use Swoft\Console\Annotation\Mapping\CommandOption;
 use Swoft\Console\Helper\Interact;
 use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
-use SwoftProject\BasicTemplate\FileGenerator;
+use SwoftLabs\Devtool\FileGenerator;
 use function bean;
 use function dirname;
 use function file_exists;

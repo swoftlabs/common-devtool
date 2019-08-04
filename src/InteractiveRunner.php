@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SwoftProject\BasicTemplate;
+namespace SwoftLabs\Devtool;
 
 /**
  * Class InteractiveRunner
@@ -9,7 +9,7 @@ class InteractiveRunner
 {
     public function ask(): self
     {
-        
+
     }
 
     public function run(): self
