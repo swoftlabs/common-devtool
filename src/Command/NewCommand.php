@@ -16,22 +16,22 @@ use Swoole\Coroutine;
 use function trim;
 
 /**
- * Class CreateCommand
+ * Class NewCommand
  *
  * @Command(
- * alias="new",
+ * alias="create",
  * coroutine=true,
  * desc="Privide some commads for quick create new application or component"
  * )
  *
  * @CommandOption("yes", short="y", desc="whether need to confirm operation", default=false, type="bool")
  */
-class CreateCommand
+class NewCommand
 {
     /**
      * quick crate an new swoft application project
      *
-     * @CommandMapping("app", alias="a")
+     * @CommandMapping(alias="a, app, project")
      * @CommandOption(
      *  "type", type="string", default="http",
      *  desc="the crate new application project type. allow: http, ws, tcp, rpc, full"
@@ -44,7 +44,7 @@ class CreateCommand
      * @param Input $input
      * @param Output $output
      */
-    public function app(Input $input, Output $output): void
+    public function application(Input $input, Output $output): void
     {
         $pcr = ProjectCreator::new([
             'type'      => $input->getStringOpt('type'),
@@ -96,7 +96,7 @@ class CreateCommand
     /**
      * quick crate an new swoft component project
      *
-     * @CommandMapping(alias="c,cpt")
+     * @CommandMapping(alias="c, cpt")
      *
      * @CommandOption(
      *  "output", short="o", type="string",

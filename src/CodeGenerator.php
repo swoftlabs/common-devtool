@@ -7,5 +7,8 @@ namespace SwoftLabs\Devtool;
  */
 class CodeGenerator
 {
-
+    public function config(array $config): self
+    {
+        # code...
+    }
 }
