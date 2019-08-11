@@ -91,7 +91,7 @@ class FileGenerator
             if ($firstChar === '@') {
                 $partFile = Swoft::getAlias($partFile);
             } elseif ($firstChar !== '/') {
-                $relativePath = dirname($this->getTplFile());
+                $relativePath = dirname($this->getTplFilepath());
                 $partFile = $relativePath . '/' . $partFile;
             }
 

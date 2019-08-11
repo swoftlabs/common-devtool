@@ -110,14 +110,14 @@ class GenCommand
         [$config, $data] = $this->collectInfo($in, $out, [
             'suffix'      => 'Controller',
             'namespace'   => 'App\\Http\\Controller',
-            'tplFilename' => 'controller-http',
+            'tplFilename' => 'controller-http-rest',
         ]);
 
         $data['prefix'] = $in->getOpt('prefix') ?: '/' . $data['name'];
         $data['idVar']  = '{id}';
 
         if ($in->getOpt('rest', true)) {
-            $config['tplFilename'] = 'controller-rest';
+            $config['tplFilename'] = 'controller-http';
         }
 
         return $this->writeFile('app/Http/Controller', $data, $config, $out);
@@ -247,7 +247,7 @@ class GenCommand
      * @CommandMapping(alias="mdl, middle")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
-     * @CommandArgument("dir", desc="The class file save dir", default="@app/Middleware")
+     * @CommandArgument("dir", desc="The class file save dir", default="@app/Http/Middleware")
      *
      * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Http\Middleware")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Middleware")
