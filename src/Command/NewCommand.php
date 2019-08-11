@@ -12,7 +12,9 @@ use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
 use Swoft\Stdlib\Helper\Sys;
 use SwoftLabs\Devtool\ProjectCreator;
+use SwoftLabs\Devtool\Creator\ComponentCreator;
 use Swoole\Coroutine;
+use function get_current_user;
 use function trim;
 
 /**
@@ -28,6 +30,16 @@ use function trim;
  */
 class NewCommand
 {
+    /**
+     * @var string
+     */
+    private $defaultTplDir;
+
+    public function init(): void
+    {
+        $this->defaultTplDir = dirname(__DIR__, 2) . '/template/';
+    }
+
     /**
      * quick crate an new swoft application project
      *
@@ -83,7 +95,7 @@ class NewCommand
             return;
         }
 
-        $pcr->createApp();
+        $pcr->create();
         if ($err = $pcr->getError()) {
             $output->error($err);
             return;
@@ -102,28 +114,74 @@ class NewCommand
      *  "output", short="o", type="string",
      *  desc="the output dir for new component, default is crate at current dir"
      * )
+     * @CommandOption("namespace", short="n", desc="the component namespace", type="string")
+     * @CommandOption("pkg-name", desc="the new component package name", type="string")
      * @CommandOption("no-license", desc="dont add the apache license file", default=false, type="bool")
      * @CommandArgument("name", type="string", desc="the new component project name", mode=Command::ARG_REQUIRED)
-     *
+     * @example
+     *   {fullCommand} demo -n My\\Component
+     *   {fullCommand} demo -n My\\Component -o vender/somedir
      * @param Input $input
      * @param Output $output
      */
     public function component(Input $input, Output $output): void
     {
-        $workDir = $input->getWorkDir();
-
-        $info = [
-            'name'      => $input->getString('name'),
-            'output'    => $input->getStringOpt('output') ?: $workDir,
-            'noLicense' => $input->getBoolOpt('no-license'),
-        ];
-
         // $cmdId  = $input->getCommandId();
         // $config = bean('cliApp')->get('commands');
         // if (isset($config[$cmdId])) {
         // }
 
-        $output->aList($info, 'information');
-        $output->colored('WIP ...');
+        $workDir = $input->getWorkDir();
+
+        $ccr = new ComponentCreator([
+            'name'      => $input->getString('name'),
+            'tplDir'    => $this->defaultTplDir,
+            'workDir'   => $workDir,
+            'pkgName'   => $input->getString('pkg-name'),
+            'username'  => get_current_user(),
+            'namespace' => $input->sameOpt(['n', 'namespace'], ''),
+            'outputDir' => $input->getStringOpt('output') ?: $workDir,
+            'noLicense' => $input->getBoolOpt('no-license'),
+        ]);
+
+        $ccr->setOnExecCmd(function(string $cmd) {
+            Show::colored('> ' . $cmd, 'yellow');
+        });
+
+        if (!$ccr->validate()) {
+            $output->error($ccr->getError());
+            return;
+        }
+
+        $name = $ccr->getName();
+        $yes  = $input->sameOpt(['y', 'yes'], false);
+
+        $output->aList($ccr->getInfo(), 'information');
+
+        if (file_exists($path = $ccr->getTargetPath())) {
+            if (!$yes && !$output->confirm('component dir has been exist! delete it', false)) {
+                $output->colored('GoodBye!');
+                return;
+            }
+
+            if (!$ccr->deleteDir($path)) {
+                $output->error($ccr->getError());
+                return;
+            }
+        }
+
+        if (!$yes && !$output->confirm('ensure create component: ' . $name)) {
+            $output->colored('GoodBye!');
+            return;
+        }
+
+        $ccr->create();
+        if ($err = $ccr->getError()) {
+            $output->error($err);
+            return;
+        }
+
+        $output->colored('Completed!');
+        $output->colored("Component: $name created(path: $path)");
     }
 }

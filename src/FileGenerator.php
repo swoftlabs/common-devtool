@@ -45,6 +45,11 @@ class FileGenerator
     protected $tplExt = '.stub';
 
     /**
+     * @var string Template file path.
+     */
+    protected $tplFile = '';
+
+    /**
      * @var string Template file name.
      */
     protected $tplFilename = '';
@@ -155,7 +160,7 @@ class FileGenerator
             $this->addData($data);
         }
 
-        $tplFile = $this->getTplFile();
+        $tplFile = $this->getTplFilepath();
         $content = $this->parser->loadTemplate(file_get_contents($tplFile))->apply($this->data);
 
         return $content;
@@ -175,7 +180,7 @@ class FileGenerator
             $this->addData($data);
         }
 
-        $tplFile = $this->getTplFile();
+        $tplFile = $this->getTplFilepath();
         $content = $this->parser->loadTemplate(file_get_contents($tplFile))->apply($this->data);
 
         $dir = dirname($file);
@@ -192,9 +197,11 @@ class FileGenerator
      * @return string
      * @throws RuntimeException
      */
-    public function getTplFile(bool $checkIt = true): string
+    public function getTplFilepath(bool $checkIt = true): string
     {
-        $file = $this->tplDir . $this->tplFilename . $this->tplExt;
+        if (!$file = $this->tplFile) {
+            $file = $this->tplDir . $this->tplFilename . $this->tplExt;
+        }
 
         if ($checkIt && !file_exists($file)) {
             throw new RuntimeException("Template file not exists! File: $file");
@@ -276,6 +283,30 @@ class FileGenerator
     public function setTplExt(string $tplExt): self
     {
         $this->tplExt = '.' . trim($tplExt, '.');
+
+        return $this;
+    }
+
+    /**
+     * Get template file path.
+     *
+     * @return  string
+     */
+    public function getTplFile(): string
+    {
+        return $this->tplFile;
+    }
+
+    /**
+     * Set template file path.
+     *
+     * @param  string  $tplFile  Template file path.
+     *
+     * @return  self
+     */
+    public function setTplFile(string $tplFile): self
+    {
+        $this->tplFile = $tplFile;
 
         return $this;
     }

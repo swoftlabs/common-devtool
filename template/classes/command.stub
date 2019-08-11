@@ -2,32 +2,36 @@
 {include file="file-header.stub"}
 namespace {= namespace};
 
-use Swoft\Console\Bean\Annotation\Command;
+use Swoft\Console\Annotation\Mapping\Command;
+use Swoft\Console\Annotation\Mapping\CommandMapping;
 use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
 
 /**
- * This is a example command class
+ * This is description for the command group
+ *
  * @Command(coroutine=false)
- * @package {= namespace}
  */
 class {= className}
 {
     /**
-     * this is a example command
-     * @Usage {= commandVar} [arguments ...] [--options ...]
-     * @Arguments
-     *   first STRING        The first argument value
-     *   second STRING       The second argument value
-     * @Options
-     *   --opt STRING        This is a long option
-     *   -s BOOL             This is a short option(<comment>use color</comment>)
-     * @Example {= commandVar} FIRST SECOND --opt VALUE -s
-     * @param Input $input
+     * this is description for the command
+     *
+     * @CommandMapping(alias="myc")
+     * @CommandArgument("arg0", type="string", desc="this is argument description")
+     *
+     * @CommandOption("opt0", short="s", type="integer", default=3,
+     *     desc="Interval time for watch files, unit is seconds"
+     * )
+     *
+     * @param Input  $input
      * @param Output $output
-     * @return int
+     *
+     * @example
+     *   {fullCommand} -h
+     *   {fullCommand} arg0val --opt 20
      */
-    public function demo(Input $input, Output $output): int
+    public function myCommand(Input $input, Output $output): int
     {
         // some logic ...
         $output->writeln('hello, this is ' . __METHOD__);

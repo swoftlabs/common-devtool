@@ -351,6 +351,7 @@ class GenCommand
         $config = [
             'tplFilename' => $in->getOpt('tpl-file') ?: $defaults['tplFilename'],
             'tplDir'      => $in->getOpt('tpl-dir') ?: $this->defaultTplPath,
+            'workDir'     => $in->getWorkDir(),
         ];
 
         if (!$name = $in->getArg(0)) {
@@ -399,6 +400,12 @@ class GenCommand
             $saveDir = $defaultDir;
         }
 
+        // run in phar package
+        if (defined('IN_PHAR') && IN_PHAR) {
+            $saveDir = ltrim($saveDir, '@');
+        }
+
+        // \vdump($defaultDir, $saveDir, $config['workDir']);
         $realpath = Str::rmPharPrefix(Swoft::getAlias($saveDir));
 
         $file = $realpath . '/' . $data['className'] . '.php';

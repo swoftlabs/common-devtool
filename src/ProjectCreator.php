@@ -150,7 +150,7 @@ class ProjectCreator
         return array_filter($info);
     }
 
-    public function createApp()
+    public function create(): void
     {
         if ($this->error) {
             return;
@@ -214,14 +214,6 @@ class ProjectCreator
         }
 
         return true;
-    }
-
-    public function createComponent()
-    {
-        if ($this->error) {
-            return;
-        }
-
     }
 
     /**
