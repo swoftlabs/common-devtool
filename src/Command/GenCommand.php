@@ -49,9 +49,9 @@ class GenCommand
      * @CommandMapping(alias="cmd")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
-     * @CommandArgument("dir", desc="The class file save dir", default="@app/Command")
+     * @CommandArgument("dir", desc="The class file save dir", default="@app/Console/Command")
      *
-     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Command")
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Consle\Command")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Command")
      * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="command.stub")
      * @param Input  $in
@@ -89,7 +89,7 @@ class GenCommand
      * @CommandOption("prefix", type="string", desc="The route prefix for the controller, default is class name", default="string")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Controller")
      * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Http\Controller")
-     * @CommandOption("tpl-file", type="string", desc="The template file filename or full path", default="controler-rest.stub")
+     * @CommandOption("tpl-file", type="string", desc="The template file filename or full path", default="controler-http-rest.stub")
      *
      * @param Input  $in
      * @param Output $out
@@ -110,7 +110,7 @@ class GenCommand
         [$config, $data] = $this->collectInfo($in, $out, [
             'suffix'      => 'Controller',
             'namespace'   => 'App\\Http\\Controller',
-            'tplFilename' => 'controller',
+            'tplFilename' => 'controller-http',
         ]);
 
         $data['prefix'] = $in->getOpt('prefix') ?: '/' . $data['name'];
@@ -145,6 +145,7 @@ class GenCommand
      * @example
      * <info>{fullCommand} echo --prefix /echo -y</info>   Gen EchoModule class to WebSocket dir
      * <info>{fullCommand} chat --prefix /chat</info>      Gen ChatModule class to WebSocket dir
+     * <info>{fullCommand} chat --prefix /chat --tpl-file ws-module-use</info>      Gen ChatModule class to WebSocket dir
      *
      */
     public function wsModule(Input $in, Output $out): int
@@ -170,7 +171,7 @@ class GenCommand
      * @CommandOption("namespace", short="n", desc="The class namespace", default="App\WebSocket\Controller")
      * @CommandOption("prefix", type="string", desc="The route prefix for the websocket, default is class name")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Controller")
-     * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="ws-controller.stub")
+     * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="controller-ws.stub")
      * @param Input  $in
      * @param Output $out
      *
