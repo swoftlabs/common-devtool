@@ -51,7 +51,7 @@ class GenCommand
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Console/Command")
      *
-     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Consle\Command")
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Console\Command")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Command")
      * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="command.stub")
      * @param Input  $in
