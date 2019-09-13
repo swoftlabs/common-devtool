@@ -95,7 +95,7 @@ abstract class AbstractCreator
      *
      * @return void
      */
-    public function notifyCmdExec(string $cmd)
+    public function notifyCmdExec(string $cmd): void
     {
         if ($cb = $this->onExecCmd) {
             $cb($cmd);

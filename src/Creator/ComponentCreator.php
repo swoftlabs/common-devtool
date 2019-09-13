@@ -249,7 +249,7 @@ class ComponentCreator extends AbstractCreator
      *
      * @return  self
      */
-    public function setTargetPath(string $targetPath)
+    public function setTargetPath(string $targetPath): self
     {
         $this->targetPath = $targetPath;
 
