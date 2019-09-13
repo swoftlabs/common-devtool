@@ -13,7 +13,7 @@
   },
   "autoload": {
     "psr-4": {
-      "{= escapePkgNamspace}\\": "src/"
+      "{= escapePkgNamespace}\\": "src/"
     }
   },
   "require-dev": {
@@ -21,8 +21,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "{= escapePkgNamspace}Test\\Unit\\": "test/unit/",
-      "{= escapePkgNamspace}Test\\Testing\\": "test/testing/"
+      "{= escapePkgNamespace}Test\\Unit\\": "test/unit/",
+      "{= escapePkgNamespace}Test\\Testing\\": "test/testing/"
     }
   },
   "scripts": {

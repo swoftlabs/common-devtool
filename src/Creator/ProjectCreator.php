@@ -1,21 +1,21 @@
 <?php declare(strict_types=1);
 
-namespace SwoftLabs\Devtool;
+namespace SwoftLabs\Devtool\Creator;
 
-use Swoft\Stdlib\Helper\ObjectHelper;
+use InvalidArgumentException;
 use Swoft\Stdlib\Helper\Dir;
 use Swoft\Stdlib\Helper\Sys;
-use Swoole\Coroutine;
 use function array_filter;
 use function basename;
 use function file_exists;
+use function strlen;
 use function strpos;
 use function trim;
 
 /**
  * class ProjectCreator
  */
-class ProjectCreator
+class ProjectCreator extends AbstractCreator
 {
     public const GITHUB_URL = 'https://github.com';
 
@@ -29,20 +29,6 @@ class ProjectCreator
         'rpc'  => 'swoft-rpc-project',
         'ws'   => 'swoft-ws-project',
     ];
-
-    /**
-     * Error message
-     *
-     * @var string
-     */
-    private $error = '';
-
-    /**
-     * new prject name
-     *
-     * @var string
-     */
-    private $name = '';
 
     /**
      * type name
@@ -66,13 +52,6 @@ class ProjectCreator
     private $repoUrl = '';
 
     /**
-     * Current work dir
-     *
-     * @var string
-     */
-    private $workDir = '';
-
-    /**
      * Project path
      *
      * @var string
@@ -84,29 +63,16 @@ class ProjectCreator
      */
     private $refresh = false;
 
-    /**
-     * @var callable
-     */
-    private $onExecCmd;
-
     public static function new(array $config = [])
     {
         return new self($config);
     }
 
-    /**
-     * Class constructor.
-     */
-    public function __construct(array $config = [])
-    {
-        ObjectHelper::init($this, $config);
-    }
-
-    public function validate(): void
+    public function validate(): bool
     {
         if (!$this->name) {
             $this->error = 'please set the new project name';
-            return;
+            return false;
         }
 
         if ($repo = $this->repo) {
@@ -116,24 +82,25 @@ class ProjectCreator
                 $repoUrl = self::GITHUB_URL . '/' . $repo . '.git';
             } else {
                 $this->error = "invalid 'repo' address: $repo";
-                return;
+                return false;
             }
         } elseif ($type = $this->type) {
-            if ($this->isValiadType($type)) {
+            if ($this->isValidType($type)) {
                 $repoName = self::DEMO_GITHUB_REPOS[$type];
                 $repoUrl = self::SWOFT_CLOUD_URL . '/' . $repoName . '.git';
             } else {
                 $this->error = "invalid 'type' name: {$type}, allow: http, ws, tcp, rpc";
-                return;
+                return false;
             }
         } else {
             $this->error = "missing 'repo' or 'type' setting";
-            return;
+            return false;
         }
 
         $this->repoUrl = $repoUrl;
 
         $this->projectPath = $this->workDir ? $this->workDir . '/' . $this->name : $this->name;
+        return true;
     }
 
     public function getInfo(): array
@@ -194,37 +161,12 @@ class ProjectCreator
 
     public function deleteDir(string $path): bool
     {
-        if (\strlen($path) < 6) {
-            throw new \InvalidArgumentException('path is to short, cannot exec rm', 500);
+        if (strlen($path) < 6) {
+            throw new InvalidArgumentException('path is to short, cannot exec rm', 500);
         }
 
         $cmd = "rm -rf $path";
         return $this->exec($cmd);
-    }
-
-    public function exec(string $cmd): bool
-    {
-        $this->notifyCmdExec($cmd);
-
-        $ret = Coroutine::exec($cmd);
-        if ((int)$ret['code'] !== 0) {
-            $msg = $ret['output'];
-            $this->error = 'exec command fail' . ($msg ? ': ' . $msg : '');
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string $cmd
-     * @return void
-     */
-    public function notifyCmdExec(string $cmd)
-    {
-        if ($cb = $this->onExecCmd) {
-            $cb($cmd);
-        }
     }
 
     /**
@@ -252,19 +194,9 @@ class ProjectCreator
      * @param string $type
      * @return boolean
      */
-    public function isValiadType(string $type): bool
+    public function isValidType(string $type): bool
     {
         return isset(self::DEMO_GITHUB_REPOS[$type]);
-    }
-
-    /**
-     * Get error message
-     *
-     * @return  string
-     */
-    public function getError(): string
-    {
-        return $this->error;
     }
 
     /**
@@ -315,60 +247,6 @@ class ProjectCreator
         if ($repo = trim($repo)) {
             $this->repo = $repo;
         }
-
-        return $this;
-    }
-
-    /**
-     * Get new prject name
-     *
-     * @return  string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set new prject name
-     *
-     * @param  string  $name  new prject name
-     *
-     * @return  self
-     */
-    public function setName(string $name): self
-    {
-        if ($name = trim($name, ' /')) {
-            $this->name = $name;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of onExecCmd
-     *
-     * @param  callable  $onExecCmd
-     *
-     * @return  self
-     */
-    public function setOnExecCmd(callable $onExecCmd): self
-    {
-        $this->onExecCmd = $onExecCmd;
-
-        return $this;
-    }
-
-    /**
-     * Set current work dir
-     *
-     * @param  string  $workDir  Current work dir
-     *
-     * @return  self
-     */
-    public function setWorkDir(string $workDir): self
-    {
-        $this->workDir = $workDir;
 
         return $this;
     }

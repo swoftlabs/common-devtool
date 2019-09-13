@@ -11,7 +11,7 @@ use Swoft\Console\Helper\Show;
 use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
 use Swoft\Stdlib\Helper\Sys;
-use SwoftLabs\Devtool\ProjectCreator;
+use SwoftLabs\Devtool\Creator\ProjectCreator;
 use SwoftLabs\Devtool\Creator\ComponentCreator;
 use Swoole\Coroutine;
 use function get_current_user;

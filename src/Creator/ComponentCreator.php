@@ -99,7 +99,7 @@ class ComponentCreator extends AbstractCreator
             return;
         }
 
-        Dir::make($path, 0755);
+        Dir::make($path);
 
         $files  = [
             'gitignore.stub' => '.gitignore',
@@ -132,8 +132,8 @@ class ComponentCreator extends AbstractCreator
             'name'        => $this->name,
             'upName'      => $upName,
             'pkgName'     => $this->pkgName,
-            'pkgNamspace' => $this->namespace,
-            'escapePkgNamspace' => str_replace('\\', '\\\\', $this->namespace),
+            'pkgNamespace' => $this->namespace,
+            'escapePkgNamespace' => str_replace('\\', '\\\\', $this->namespace),
         ]);
 
         $this->createFiles($renderer, $files);

@@ -3,8 +3,6 @@
 namespace SwoftLabs\Devtool\Creator;
 
 use Swoft\Stdlib\Helper\ObjectHelper;
-use Swoft\Stdlib\Helper\Dir;
-use Swoft\Stdlib\Helper\Sys;
 use Swoole\Coroutine;
 use function strlen;
 
@@ -46,6 +44,8 @@ abstract class AbstractCreator
 
     /**
      * Class constructor.
+     *
+     * @param array $config
      */
     public function __construct(array $config = [])
     {
@@ -58,6 +58,7 @@ abstract class AbstractCreator
 
     /**
      * @param string $path
+     *
      * @return boolean
      */
     public function deleteDir(string $path): bool
@@ -72,6 +73,7 @@ abstract class AbstractCreator
 
     /**
      * @param string $cmd
+     *
      * @return boolean
      */
     public function exec(string $cmd): bool
@@ -80,7 +82,7 @@ abstract class AbstractCreator
 
         $ret = Coroutine::exec($cmd);
         if ((int)$ret['code'] !== 0) {
-            $msg = $ret['output'];
+            $msg         = $ret['output'];
             $this->error = 'exec command fail' . ($msg ? ': ' . $msg : '');
             return false;
         }
@@ -90,6 +92,7 @@ abstract class AbstractCreator
 
     /**
      * @param string $cmd
+     *
      * @return void
      */
     public function notifyCmdExec(string $cmd)
@@ -102,9 +105,9 @@ abstract class AbstractCreator
     /**
      * Set the value of onExecCmd
      *
-     * @param  callable  $onExecCmd
+     * @param callable $onExecCmd
      *
-     * @return  self
+     * @return self
      */
     public function setOnExecCmd(callable $onExecCmd): self
     {
@@ -116,9 +119,9 @@ abstract class AbstractCreator
     /**
      * Set current work dir
      *
-     * @param  string  $workDir  Current work dir
+     * @param string $workDir Current work dir
      *
-     * @return  self
+     * @return self
      */
     public function setWorkDir(string $workDir): self
     {
@@ -130,7 +133,7 @@ abstract class AbstractCreator
     /**
      * Get error message
      *
-     * @return  string
+     * @return string
      */
     public function getError(): string
     {
@@ -150,7 +153,7 @@ abstract class AbstractCreator
     /**
      * Set new prject name
      *
-     * @param  string  $name  new prject name
+     * @param string $name new prject name
      *
      * @return  self
      */
