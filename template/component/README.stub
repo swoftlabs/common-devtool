@@ -1,6 +1,14 @@
 # {= upName}
 
-Component for swoft
+{= upName} component for swoft framework
+
+## Install
+
+- install by composer
+
+```bash
+composer require {= pkgName}
+```
 
 ## LICENSE
 

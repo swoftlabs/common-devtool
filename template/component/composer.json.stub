@@ -6,7 +6,7 @@
     "swoft",
     "swoft-component"
   ],
-  "description": "swoft {= name} component",
+  "description": "{= name} component for swoft framework",
   "license": "Apache-2.0",
   "require": {
     "php": ">7.1"
