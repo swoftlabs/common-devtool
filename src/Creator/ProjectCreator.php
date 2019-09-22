@@ -28,6 +28,7 @@ class ProjectCreator extends AbstractCreator
         'tcp'  => 'swoft-tcp-project',
         'rpc'  => 'swoft-rpc-project',
         'ws'   => 'swoft-ws-project',
+        'full' => 'swoft',
     ];
 
     /**

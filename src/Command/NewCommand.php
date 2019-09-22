@@ -2,20 +2,16 @@
 
 namespace SwoftLabs\Devtool\Command;
 
-use Swoft;
 use Swoft\Console\Annotation\Mapping\Command;
+use Swoft\Console\Annotation\Mapping\CommandArgument;
 use Swoft\Console\Annotation\Mapping\CommandMapping;
 use Swoft\Console\Annotation\Mapping\CommandOption;
-use Swoft\Console\Annotation\Mapping\CommandArgument;
 use Swoft\Console\Helper\Show;
 use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
-use Swoft\Stdlib\Helper\Sys;
-use SwoftLabs\Devtool\Creator\ProjectCreator;
 use SwoftLabs\Devtool\Creator\ComponentCreator;
-use Swoole\Coroutine;
+use SwoftLabs\Devtool\Creator\ProjectCreator;
 use function get_current_user;
-use function trim;
 
 /**
  * Class NewCommand
@@ -53,19 +49,33 @@ class NewCommand
      *  desc="custom the template repository url for create new application"
      * )
      * @CommandArgument("name", type="string", desc="the new application project name", mode=Command::ARG_REQUIRED)
-     * @param Input $input
+     * @param Input  $input
      * @param Output $output
+     *
+     * @example
+     *   {fullCommand} --type ws
+     *   {fullCommand} --type tcp
+     *   {fullCommand} --repo https://github.com/UERANME/my-swoft-skeleton.git
+     *
+     * <info>Default template repos:</info>
+     *
+     * 'http'   https://github.com/swoft-cloud/swoft-http-project.git
+     * 'tcp'    https://github.com/swoft-cloud/swoft-tcp-project.git
+     * 'rpc'    https://github.com/swoft-cloud/swoft-rpc-project.git
+     * 'ws'     https://github.com/swoft-cloud/swoft-ws-project.git
+     * 'full'   https://github.com/swoft-cloud/swoft.git
+     *
      */
     public function application(Input $input, Output $output): void
     {
         $pcr = ProjectCreator::new([
-            'type'      => $input->getStringOpt('type'),
-            'repo'      => $input->getStringOpt('repo'),
-            'name'      => $input->getString('name'),
-            'workDir'   => $input->getWorkDir(),
+            'type'    => $input->getStringOpt('type'),
+            'repo'    => $input->getStringOpt('repo'),
+            'name'    => $input->getString('name'),
+            'workDir' => $input->getWorkDir(),
         ]);
 
-        $pcr->setOnExecCmd(function(string $cmd) {
+        $pcr->setOnExecCmd(function (string $cmd) {
             Show::colored('> ' . $cmd, 'yellow');
         });
 
@@ -114,15 +124,16 @@ class NewCommand
      *  "output", short="o", type="string",
      *  desc="the output dir for new component, default is crate at current dir"
      * )
-     * @CommandOption("namespace", short="n", desc="the component namespace", type="string")
-     * @CommandOption("pkg-name", desc="the new component package name", type="string")
+     * @CommandOption("namespace", short="n", desc="namespace of the new component", type="string")
+     * @CommandOption("pkg-name", desc="the new component package name, will write to composer.json", type="string")
      * @CommandOption("no-license", desc="dont add the apache license file", default=false, type="bool")
      * @CommandArgument("name", type="string", desc="the new component project name", mode=Command::ARG_REQUIRED)
+     * @param Input  $input
+     * @param Output $output
+     *
      * @example
      *   {fullCommand} demo -n My\\Component
      *   {fullCommand} demo -n My\\Component -o vender/somedir
-     * @param Input $input
-     * @param Output $output
      */
     public function component(Input $input, Output $output): void
     {
@@ -144,7 +155,7 @@ class NewCommand
             'noLicense' => $input->getBoolOpt('no-license'),
         ]);
 
-        $ccr->setOnExecCmd(function(string $cmd) {
+        $ccr->setOnExecCmd(function (string $cmd) {
             Show::colored('> ' . $cmd, 'yellow');
         });
 
