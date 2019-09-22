@@ -30,8 +30,8 @@ class {= className}
      * @param Output $output
      *
      * @example
-     *   {fullCommand} -h
-     *   {fullCommand} arg0val --opt 20
+     *   {= fullCmdVar} -h
+     *   {= fullCmdVar} arg0val --opt 20
      */
     public function myCommand(Input $input, Output $output): int
     {

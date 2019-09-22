@@ -27,7 +27,7 @@ use function ucfirst;
  *
  * @since 1.0
  */
-class FileGenerator
+class FileRenderer
 {
     /**
      * @var TextTemplate
@@ -150,11 +150,11 @@ class FileGenerator
     /**
      * @param array $data
      *
-     * @return bool|int
+     * @return string
      * @throws RuntimeException
      * @throws TemplateParsingException
      */
-    public function render(array $data = [])
+    public function render(array $data = []): string
     {
         if ($data) {
             $this->addData($data);
@@ -183,6 +183,22 @@ class FileGenerator
         $tplFile = $this->getTplFilepath();
         $content = $this->parser->loadTemplate(file_get_contents($tplFile))->apply($this->data);
 
+        $dir = dirname($file);
+        if (!is_dir($dir)) {
+            Dir::make($dir);
+        }
+
+        return file_put_contents($file, $content) > 0;
+    }
+
+    /**
+     * @param string $file
+     * @param string $content
+     *
+     * @return bool
+     */
+    public function writeTo(string $file, string $content): bool
+    {
         $dir = dirname($file);
         if (!is_dir($dir)) {
             Dir::make($dir);
@@ -254,7 +270,7 @@ class FileGenerator
     /**
      * @param string $tplFilename
      *
-     * @return FileGenerator
+     * @return FileRenderer
      */
     public function setTplFilename(string $tplFilename): self
     {
@@ -266,7 +282,7 @@ class FileGenerator
     /**
      * @param string $tplDir
      *
-     * @return FileGenerator
+     * @return FileRenderer
      */
     public function setTplDir(string $tplDir): self
     {
@@ -278,7 +294,7 @@ class FileGenerator
     /**
      * @param string $tplExt
      *
-     * @return FileGenerator
+     * @return FileRenderer
      */
     public function setTplExt(string $tplExt): self
     {

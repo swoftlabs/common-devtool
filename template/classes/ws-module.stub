@@ -14,6 +14,7 @@ use Swoole\WebSocket\Server;
 
 /**
  * Class {= className} - This is an module for handle websocket
+ *
  * @WsModule(
  *    "{= path}"
  *     messageParser=JsonParser::class,

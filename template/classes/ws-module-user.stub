@@ -14,6 +14,7 @@ use Swoole\WebSocket\Server;
 
 /**
  * Class {= className} - This is an module for handle websocket, use custom message dispatch.
+ *
  * @WsModule("{= path}")
  */
 class {= className}

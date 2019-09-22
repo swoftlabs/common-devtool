@@ -1,0 +1,30 @@
+<?php declare(strict_types=1);
+{include file="file-header.stub"}
+namespace {= namespace};
+
+use Swoft\Bean\Annotation\Mapping\Bean;
+use Swoft\Rpc\Server\Contract\MiddlewareInterface;
+use Swoft\Rpc\Server\Contract\RequestHandlerInterface;
+use Swoft\Rpc\Server\Contract\RequestInterface;
+use Swoft\Rpc\Server\Contract\ResponseInterface;
+
+/**
+ * Class {= className}
+ *
+ * @since 2.0
+ *
+ * @Bean()
+ */
+class {= className} implements MiddlewareInterface
+{
+    /**
+     * @param RequestInterface        $request
+     * @param RequestHandlerInterface $requestHandler
+     *
+     * @return ResponseInterface
+     */
+    public function process(RequestInterface $request, RequestHandlerInterface $requestHandler): ResponseInterface
+    {
+        return $requestHandler->handle($request);
+    }
+}

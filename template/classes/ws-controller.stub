@@ -7,7 +7,8 @@ use Swoft\WebSocket\Server\Annotation\Mapping\MessageMapping;
 
 /**
  * Class {= className} - This is an controller for handle websocket message request
- * @Service()
+ *
+ * @WsController("{= prefix}")
  */
 class {= className}
 {

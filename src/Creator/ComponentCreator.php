@@ -3,7 +3,7 @@
 namespace SwoftLabs\Devtool\Creator;
 
 use Swoft\Stdlib\Helper\Dir;
-use SwoftLabs\Devtool\FileGenerator;
+use SwoftLabs\Devtool\FileRenderer;
 use function file_get_contents;
 use function file_put_contents;
 use function rtrim;
@@ -127,7 +127,7 @@ class ComponentCreator extends AbstractCreator
 
         $upName = ucfirst($this->name);
 
-        $renderer = new FileGenerator();
+        $renderer = new FileRenderer();
         $renderer->setData([
             'name'        => $this->name,
             'upName'      => $upName,
@@ -139,7 +139,7 @@ class ComponentCreator extends AbstractCreator
         $this->createFiles($renderer, $files);
     }
 
-    protected function createFiles(FileGenerator $renderer, array $files): void
+    protected function createFiles(FileRenderer $renderer, array $files): void
     {
         $tplDir = $this->tplDir . '/';
         $dstDir = $this->targetPath . '/';

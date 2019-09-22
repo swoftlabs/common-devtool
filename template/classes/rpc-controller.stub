@@ -1,0 +1,22 @@
+<?php declare(strict_types=1);
+{include file="file-header.stub"}
+namespace {= namespace};
+
+use App\Rpc\Lib\UserInterface;
+use Swoft\Rpc\Server\Annotation\Mapping\Service;
+
+/**
+ * Class {= className} - This is an controller for handle rpc request
+ *
+ * @Service()
+ */
+class {= className} implements UserInterface
+{
+    /**
+     * @return array
+     */
+    public function getList(): array
+    {
+        return ['item0', 'item1'];
+    }
+}
