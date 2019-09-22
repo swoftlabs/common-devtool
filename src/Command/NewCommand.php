@@ -19,7 +19,7 @@ use function get_current_user;
  * @Command(
  * alias="create",
  * coroutine=true,
- * desc="Privide some commads for quick create new application or component"
+ * desc="Provide some commads for quick create new application or component"
  * )
  *
  * @CommandOption("yes", short="y", desc="whether need to confirm operation", default=false, type="bool")
