@@ -252,7 +252,6 @@ class CodeGenerator
             $saveDir = ltrim($saveDir, '@');
         }
 
-        // \vdump($defaultDir, $saveDir, $config['workDir']);
         $realpath = Str::rmPharPrefix(Swoft::getAlias($saveDir));
 
         $file = $realpath . '/' . $this->tplData['className'] . '.php';
@@ -260,7 +259,7 @@ class CodeGenerator
 
         $out->writeln("Target File: <info>$file</info>\n");
 
-        vdump($this->tplData);
+        // vdump($this->tplData);
         $renderer = new FileRenderer($this->current);
         $content  = $renderer->render($this->tplData);
 

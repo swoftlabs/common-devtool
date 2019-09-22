@@ -28,6 +28,7 @@ class {= className}
      *
      * @param Input  $input
      * @param Output $output
+     * @return int The exit code
      *
      * @example
      *   {= fullCmdVar} -h

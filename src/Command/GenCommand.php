@@ -5,25 +5,14 @@ namespace SwoftLabs\Devtool\Command;
 use InvalidArgumentException;
 use Leuffen\TextTemplate\TemplateParsingException;
 use RuntimeException;
-use Swoft;
 use Swoft\Console\Annotation\Mapping\Command;
 use Swoft\Console\Annotation\Mapping\CommandArgument;
 use Swoft\Console\Annotation\Mapping\CommandMapping;
 use Swoft\Console\Annotation\Mapping\CommandOption;
-use Swoft\Console\Helper\Interact;
 use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
-use Swoft\Stdlib\Helper\Str;
 use SwoftLabs\Devtool\CodeGenerator;
-use SwoftLabs\Devtool\FileRenderer;
-use Toolkit\Cli\Highlighter;
-use function bean;
 use function dirname;
-use function file_exists;
-use function json_encode;
-use function ucfirst;
-use const JSON_PRETTY_PRINT;
-use const JSON_UNESCAPED_SLASHES;
 
 /**
  * Generate some common application template classes
@@ -127,7 +116,7 @@ class GenCommand
 
     /**
      * Generate HTTP middleware class
-     * @CommandMapping("http-middleware", alias="mdl, middle, httpMiddleware")
+     * @CommandMapping("http-middleware", alias="http-mdl, httpmdl, http-middle, httpMiddleware")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Http/Middleware")
@@ -152,7 +141,7 @@ class GenCommand
 
     /**
      * Generate WebSocket module class
-     * @CommandMapping("ws-module", alias="wsm, wsModule")
+     * @CommandMapping("ws-module", alias="wsm, ws-mod, wsModule")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket")
@@ -186,7 +175,7 @@ class GenCommand
 
     /**
      * Generate WebSocket module/controller class
-     * @CommandMapping("ws-controller", alias="wsc, wsController")
+     * @CommandMapping("ws-controller", alias="wsc, ws-ctrl, wsController")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket/Controller")
@@ -220,7 +209,7 @@ class GenCommand
 
     /**
      * Generate RPC service class
-     * @CommandMapping("rpc-controller", alias="srvice, rpc-ctrl, rpcController")
+     * @CommandMapping("rpc-controller", alias="service, rpc-ctrl, rpcController")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Rpc/Service")
@@ -243,7 +232,7 @@ class GenCommand
 
     /**
      * Generate RPC middleware class
-     * @CommandMapping("rcp-middleware", alias="rpc-mdl, rpc-middle, rcpMiddleware")
+     * @CommandMapping("rcp-middleware", alias="rpcmdl, rpc-mdl, rpc-middle, rcpMiddleware")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Rpc/Middleware")
