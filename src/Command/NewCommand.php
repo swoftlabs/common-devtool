@@ -48,6 +48,10 @@ class NewCommand
      *  "repo", type="string",
      *  desc="custom the template repository url for create new application"
      * )
+     * @CommandOption(
+     *  "refresh", type="bool",
+     *  desc="whether remove old tmp caches before create new application"
+     * )
      * @CommandArgument("name", type="string", desc="the new application project name", mode=Command::ARG_REQUIRED)
      * @param Input  $input
      * @param Output $output
@@ -59,11 +63,12 @@ class NewCommand
      *
      * <info>Default template repos:</info>
      *
-     * 'http'   https://github.com/swoft-cloud/swoft-http-project.git
-     * 'tcp'    https://github.com/swoft-cloud/swoft-tcp-project.git
-     * 'rpc'    https://github.com/swoft-cloud/swoft-rpc-project.git
-     * 'ws'     https://github.com/swoft-cloud/swoft-ws-project.git
-     * 'full'   https://github.com/swoft-cloud/swoft.git
+     * TYPE   Github Repo URL
+     * http   https://github.com/swoft-cloud/swoft-http-project.git
+     * tcp    https://github.com/swoft-cloud/swoft-tcp-project.git
+     * rpc    https://github.com/swoft-cloud/swoft-rpc-project.git
+     * ws     https://github.com/swoft-cloud/swoft-ws-project.git
+     * full   https://github.com/swoft-cloud/swoft.git
      *
      */
     public function application(Input $input, Output $output): void
@@ -72,6 +77,7 @@ class NewCommand
             'type'    => $input->getStringOpt('type'),
             'repo'    => $input->getStringOpt('repo'),
             'name'    => $input->getString('name'),
+            'refresh' => $input->getBoolOpt('refresh'),
             'workDir' => $input->getWorkDir(),
         ]);
 

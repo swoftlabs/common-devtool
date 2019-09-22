@@ -2,6 +2,7 @@
 
 namespace SwoftLabs\Devtool\Creator;
 
+use InvalidArgumentException;
 use Swoft\Stdlib\Helper\ObjectHelper;
 use Swoole\Coroutine;
 use function strlen;
@@ -64,7 +65,7 @@ abstract class AbstractCreator
     public function deleteDir(string $path): bool
     {
         if (strlen($path) < 6) {
-            throw new \InvalidArgumentException('path is to short, cannot exec rm', 500);
+            throw new InvalidArgumentException('path is to short, cannot exec rm', 500);
         }
 
         $cmd = "rm -rf $path";

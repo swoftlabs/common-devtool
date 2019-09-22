@@ -82,6 +82,10 @@ class ComponentCreator extends AbstractCreator
             $this->namespace = ucfirst($name);
         }
 
+        if (strpos($this->namespace, '/') > 0) {
+            $this->namespace = str_replace('/', '\\', $this->namespace);
+        }
+
         $this->targetPath = rtrim($this->outputDir, '/ ') . '/' . $name;
 
         return true;
