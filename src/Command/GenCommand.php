@@ -125,7 +125,7 @@ class GenCommand
 
     /**
      * Generate WebSocket module class
-     * @CommandMapping(alias="wsm")
+     * @CommandMapping("ws-module", alias="wsm, wsModule")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket")
@@ -146,7 +146,6 @@ class GenCommand
      * <info>{fullCommand} echo --prefix /echo -y</info>   Gen EchoModule class to WebSocket dir
      * <info>{fullCommand} chat --prefix /chat</info>      Gen ChatModule class to WebSocket dir
      * <info>{fullCommand} chat --prefix /chat --tpl-file ws-module-use</info>      Gen ChatModule class to WebSocket dir
-     *
      */
     public function wsModule(Input $in, Output $out): int
     {
@@ -163,7 +162,7 @@ class GenCommand
 
     /**
      * Generate WebSocket module/controller class
-     * @CommandMapping("ws-controller", alias="wsc")
+     * @CommandMapping("ws-controller", alias="wsc, wsController")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket/Controller")
@@ -200,7 +199,7 @@ class GenCommand
 
     /**
      * Generate RPC service class
-     * @CommandMapping(alias="rpc-ctrl")
+     * @CommandMapping("rpc-controller", alias="rpc-ctrl,rpcController")
      *
      * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Rpc\Service")
      * @return int
@@ -244,7 +243,7 @@ class GenCommand
 
     /**
      * Generate HTTP middleware class
-     * @CommandMapping(alias="mdl, middle")
+     * @CommandMapping(alias="mdl, middle, http-middleware")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Http/Middleware")
@@ -261,7 +260,6 @@ class GenCommand
      * @throws TemplateParsingException
      * @example
      * <info>{fullCommand} demo</info>     Gen DemoMiddleware class to Middleware dir
-     *
      */
     public function middleware(Input $in, Output $out): int
     {

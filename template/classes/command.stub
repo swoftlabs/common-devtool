@@ -4,6 +4,8 @@ namespace {= namespace};
 
 use Swoft\Console\Annotation\Mapping\Command;
 use Swoft\Console\Annotation\Mapping\CommandMapping;
+use Swoft\Console\Annotation\Mapping\CommandArgument;
+use Swoft\Console\Annotation\Mapping\CommandOption;
 use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
 
