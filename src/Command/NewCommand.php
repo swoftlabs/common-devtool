@@ -117,8 +117,8 @@ class NewCommand
             return;
         }
 
-        $output->colored('Completed!');
-        $output->colored("Porject: $path created");
+        $output->colored("\nCompleted!");
+        $output->colored("- Porject: $path created");
     }
 
     /**
@@ -198,7 +198,7 @@ class NewCommand
             return;
         }
 
-        $output->colored('Completed!');
+        $output->colored("\nCompleted!");
         $output->colored("Component: $name created(path: $path)");
     }
 }
