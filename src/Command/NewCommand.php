@@ -138,8 +138,8 @@ class NewCommand
      * @param Output $output
      *
      * @example
-     *   {fullCommand} demo -n My\\Component
-     *   {fullCommand} demo -n My\\Component -o vender/somedir
+     *   {fullCommand} demo -n 'My\Component'
+     *   {fullCommand} demo -n 'My\Component' -o vender/somedir
      */
     public function component(Input $input, Output $output): void
     {
@@ -154,8 +154,8 @@ class NewCommand
             'name'      => $input->getString('name'),
             'tplDir'    => $this->defaultTplDir,
             'workDir'   => $workDir,
-            'pkgName'   => $input->getString('pkg-name'),
-            'username'  => get_current_user(),
+            'pkgName'   => $input->getStringOpt('pkg-name'),
+            'username'  => get_current_user() ?: 'Unknown',
             'namespace' => $input->sameOpt(['n', 'namespace'], ''),
             'outputDir' => $input->getStringOpt('output') ?: $workDir,
             'noLicense' => $input->getBoolOpt('no-license'),
