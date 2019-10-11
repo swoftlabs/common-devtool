@@ -147,8 +147,8 @@ class GenCommand
      * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket")
      *
      * @CommandOption("namespace", short="n", desc="The class namespace", default="App\WebSocket")
-     * @CommandOption("prefix", type="string", desc="The route prefix for the websocket, default is class name")
-     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Controller")
+     * @CommandOption("prefix", type="string", desc="The route path for the websocket module, default is class name")
+     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Module")
      * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="ws-module.stub")
      * @param Input  $in
      * @param Output $out
@@ -167,7 +167,7 @@ class GenCommand
     {
         $this->ger->on(CodeGenerator::AFTER_COLLECT, function (CodeGenerator $ger) use ($in) {
             $prefix = $in->getOpt('prefix') ?: '/' . $ger->getTplValue('name');
-            $ger->setTplValue('prefix', $prefix);
+            $ger->setTplValue('path', $prefix);
         });
 
         return $this->ger->runInCli($in, $out, CodeGenerator::WS_MODULE);
@@ -347,7 +347,7 @@ class GenCommand
      * @throws InvalidArgumentException
      * @throws TemplateParsingException
      * @example
-     * <info>{fullCommand} demo</info>     Gen DemoTask class to Task dir
+     * <info>{fullCommand} demo</info>     Gen DemoTask class to crontab task dir
      *
      */
     public function taskCrontab(Input $in, Output $out): int
