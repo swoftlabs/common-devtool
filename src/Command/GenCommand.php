@@ -141,7 +141,7 @@ class GenCommand
 
     /**
      * Generate WebSocket module class
-     * @CommandMapping("ws-module", alias="wsm, ws-mod, wsModule")
+     * @CommandMapping("ws-module", alias="wsm, wsmod, ws-mod, wsModule")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket")
@@ -159,9 +159,9 @@ class GenCommand
      * @throws InvalidArgumentException
      * @throws TemplateParsingException
      * @example
-     * <info>{fullCommand} echo --prefix /echo -y</info>   Gen EchoModule class to WebSocket dir
-     * <info>{fullCommand} chat --prefix /chat</info>      Gen ChatModule class to WebSocket dir
-     * <info>{fullCommand} chat --prefix /chat --tpl-file ws-module-use</info>      Gen ChatModule class to WebSocket dir
+     *   <info>{fullCommand} echo --prefix /echo -y</info>   Gen EchoModule class to WebSocket dir
+     *   <info>{fullCommand} chat --prefix /chat</info>      Gen ChatModule class to WebSocket dir
+     *   <info>{fullCommand} chat --prefix /chat --tpl-file ws-module-user</info>      Gen ChatModule class to WebSocket dir
      */
     public function wsModule(Input $in, Output $out): int
     {
@@ -193,8 +193,8 @@ class GenCommand
      * @throws InvalidArgumentException
      * @throws TemplateParsingException
      * @example
-     * <info>{fullCommand} echo --prefix /echo -y</info>   Gen EchoController class to WebSocket controller dir
-     * <info>{fullCommand} chat --prefix /chat</info>      Gen ChatController class to WebSocket controller dir
+     *   <info>{fullCommand} echo --prefix /echo -y</info>   Gen EchoController class to WebSocket controller dir
+     *   <info>{fullCommand} chat --prefix /chat</info>      Gen ChatController class to WebSocket controller dir
      *
      */
     public function wsController(Input $in, Output $out): int

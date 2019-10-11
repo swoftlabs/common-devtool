@@ -257,7 +257,7 @@ class CodeGenerator
         $file = $realpath . '/' . $this->tplData['className'] . '.php';
         $yes  = $in->sameOpt(['y', 'yes'], false);
 
-        $out->writeln("Target File: <info>$file</info>\n");
+        $out->writeln("Target File:\n  <info>$file</info>\n");
 
         // vdump($this->tplData);
         $renderer = new FileRenderer($this->current);

@@ -7,7 +7,7 @@ use Swoft\Http\Message\Response;
 use Swoft\WebSocket\Server\Annotation\Mapping\WsModule;
 use Swoft\WebSocket\Server\Annotation\Mapping\OnOpen;
 use Swoft\WebSocket\Server\Annotation\Mapping\OnClose;
-use Swoft\WebSocket\Server\Annotation\Mapping\OnHandShake;
+use Swoft\WebSocket\Server\Annotation\Mapping\OnHandshake;
 use Swoft\WebSocket\Server\MessageParser\JsonParser;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
@@ -29,7 +29,8 @@ class {= className}
      *  - 第一个元素的值来决定是否进行握手
      *  - 第二个元素是response对象
      * - 可以在response设置一些自定义header,body等信息
-     * @OnHandShake()
+     *
+     * @OnHandshake()
      * @param Request $request
      * @param Response $response
      * @return array
