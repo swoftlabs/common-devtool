@@ -118,7 +118,7 @@ class NewCommand
         }
 
         $output->colored("\nCompleted!");
-        $output->colored("- Porject: $path created");
+        $output->colored("- Project: $path created");
     }
 
     /**

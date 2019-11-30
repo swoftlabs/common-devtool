@@ -148,7 +148,7 @@ class ProjectCreator extends AbstractCreator
         }
 
         if (!$hasExist) {
-            $cmd = "cd $tmpDir && git clone --no-tags --depth 1 {$this->repoUrl}";
+            $cmd = "cd $tmpDir && git clone --depth 1 {$this->repoUrl}";
             if (!$this->exec($cmd)) {
                 return;
             }
