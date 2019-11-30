@@ -74,7 +74,7 @@ class GenCommand
     /**
      * Generate HTTP controller class
      *
-     * @CommandMapping("http-controller", alias="ctrl, http-ctrl, httpController")
+     * @CommandMapping("http-controller", alias="ctrl, http-ctrl")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Http/Controller")
@@ -116,7 +116,7 @@ class GenCommand
 
     /**
      * Generate HTTP middleware class
-     * @CommandMapping("http-middleware", alias="http-mdl, httpmdl, http-middle, httpMiddleware")
+     * @CommandMapping("http-middleware", alias="http-mdl, httpmdl, http-middle")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Http/Middleware")
@@ -132,7 +132,7 @@ class GenCommand
      * @throws InvalidArgumentException
      * @throws TemplateParsingException
      * @example
-     * <info>{fullCommand} demo</info>     Gen DemoMiddleware class to Middleware dir
+     * <info>{fullCommand} demo</info>     Gen DemoMiddleware class to Http Middleware dir
      */
     public function httpMiddleware(Input $in, Output $out): int
     {
@@ -174,8 +174,8 @@ class GenCommand
     }
 
     /**
-     * Generate WebSocket module/controller class
-     * @CommandMapping("ws-controller", alias="wsc, ws-ctrl, wsController")
+     * Generate WebSocket message controller class
+     * @CommandMapping("ws-controller", alias="wsc, wsctrl, ws-ctrl")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket/Controller")
@@ -208,8 +208,33 @@ class GenCommand
     }
 
     /**
+     * Generate WebSocket middleware class
+     * @CommandMapping("ws-middleware", alias="wsmdl, ws-mdl, ws-middle")
+     *
+     * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
+     * @CommandArgument("dir", desc="The class file save dir", default="@app/WebSocket/Middleware")
+     *
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\WebSocket\Middleware")
+     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Middleware")
+     * @CommandOption("tpl-file", type="string", desc="The template filename", default="ws-middleware.stub")
+     * @param Input  $in
+     * @param Output $out
+     *
+     * @return int
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
+     * @throws TemplateParsingException
+     * @example
+     * <info>{fullCommand} demo</info>     Gen DemoMiddleware class to WebSocket Middleware dir
+     */
+    public function wsMiddleware(Input $in, Output $out): int
+    {
+        return $this->ger->runInCli($in, $out, CodeGenerator::WS_MIDDLEWARE);
+    }
+
+    /**
      * Generate RPC service class
-     * @CommandMapping("rpc-controller", alias="service, rpc-ctrl, rpcController")
+     * @CommandMapping("rpc-controller", alias="rpcctrl, service, rpc-ctrl")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Rpc/Service")
@@ -232,7 +257,7 @@ class GenCommand
 
     /**
      * Generate RPC middleware class
-     * @CommandMapping("rcp-middleware", alias="rpcmdl, rpc-mdl, rpc-middle, rcpMiddleware")
+     * @CommandMapping("rpc-middleware", alias="rpcmdl, rpc-mdl, rpc-middle")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Rpc/Middleware")
@@ -248,16 +273,16 @@ class GenCommand
      * @throws InvalidArgumentException
      * @throws TemplateParsingException
      * @example
-     * <info>{fullCommand} demo</info>     Gen DemoMiddleware class to Middleware dir
+     * <info>{fullCommand} demo</info>     Gen DemoMiddleware class to Rpc Middleware dir
      */
-    public function rcpMiddleware(Input $in, Output $out): int
+    public function rpcMiddleware(Input $in, Output $out): int
     {
         return $this->ger->runInCli($in, $out, CodeGenerator::RPC_MIDDLEWARE);
     }
 
     /**
      * Generate TCP controller class
-     * @CommandMapping("tcp-controller", alias="tcpc, tcp-ctrl, tcpController")
+     * @CommandMapping("tcp-controller", alias="tcpc, tcpctrl, tcp-ctrl")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Tcp/Service")
@@ -274,13 +299,37 @@ class GenCommand
      */
     public function tcpController(Input $in, Output $out): int
     {
-        // $out->writeln('un-completed ...');
         return $this->ger->runInCli($in, $out, CodeGenerator::TCP_CONTROLLER);
     }
 
     /**
+     * Generate TCP middleware class
+     * @CommandMapping("tcp-middleware", alias="tcpmdl, tcp-mdl, tcp-middle")
+     *
+     * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
+     * @CommandArgument("dir", desc="The class file save dir", default="@app/Tcp/Middleware")
+     *
+     * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Tcp\Middleware")
+     * @CommandOption("suffix", type="string", desc="The class name suffix", default="Middleware")
+     * @CommandOption("tpl-file", type="string", desc="The template filename", default="tcp-middleware.stub")
+     * @param Input  $in
+     * @param Output $out
+     *
+     * @return int
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
+     * @throws TemplateParsingException
+     * @example
+     * <info>{fullCommand} demo</info>     Gen DemoMiddleware class to Tcp Middleware dir
+     */
+    public function tcpMiddleware(Input $in, Output $out): int
+    {
+        return $this->ger->runInCli($in, $out, CodeGenerator::TCP_MIDDLEWARE);
+    }
+
+    /**
      * Generate an event listener class
-     * @CommandMapping()
+     * @CommandMapping(alias="event-listener")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Listener")
@@ -331,7 +380,7 @@ class GenCommand
 
     /**
      * Generate user cronTab task class
-     * @CommandMapping("task-crontab", alias="taskCrontab")
+     * @CommandMapping("crontab", alias="task-crontab, taskCrontab")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Task/Crontab")
@@ -350,7 +399,7 @@ class GenCommand
      * <info>{fullCommand} demo</info>     Gen DemoTask class to crontab task dir
      *
      */
-    public function taskCrontab(Input $in, Output $out): int
+    public function taskCronTab(Input $in, Output $out): int
     {
         return $this->ger->runInCli($in, $out, CodeGenerator::TASK_CRONTAB);
     }
@@ -358,7 +407,7 @@ class GenCommand
     /**
      * Generate user custom process class
      *
-     * @CommandMapping()
+     * @CommandMapping(alias="proc")
      *
      * @CommandArgument("name", desc="The class name, don't need suffix and ext. eg: <info>demo</info>")
      * @CommandArgument("dir", desc="The class file save dir", default="@app/Process")

@@ -81,9 +81,11 @@ class NewCommand
             'workDir' => $input->getWorkDir(),
         ]);
 
-        $pcr->setOnExecCmd(function (string $cmd) {
-            Show::colored('> ' . $cmd, 'yellow');
-        });
+        if ($input->boolOpt('debug')) {
+            $pcr->setOnExecCmd(function (string $cmd) {
+                Show::colored('> ' . $cmd, 'yellow');
+            });
+        }
 
         $pcr->validate();
         if ($err = $pcr->getError()) {
@@ -161,9 +163,11 @@ class NewCommand
             'noLicense' => $input->getBoolOpt('no-license'),
         ]);
 
-        $ccr->setOnExecCmd(function (string $cmd) {
-            Show::colored('> ' . $cmd, 'yellow');
-        });
+        if ($input->boolOpt('debug')) {
+            $ccr->setOnExecCmd(function (string $cmd) {
+                Show::colored('> ' . $cmd, 'yellow');
+            });
+        }
 
         if (!$ccr->validate()) {
             $output->error($ccr->getError());

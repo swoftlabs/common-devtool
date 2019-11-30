@@ -112,8 +112,12 @@ class CodeGenerator
             'tplFilename' => 'ws-module', // ws-module-user
             'outDir'      => 'app/WebSocket',
         ],
-        // TODO wsMiddleware
-        // 'wsMiddleware'   => [],
+        'wsMiddleware'   => [
+            'suffix'      => 'Middleware',
+            'namespace'   => 'App\\WebSocket\\Middleware',
+            'tplFilename' => 'ws-middleware',
+            'outDir'      => 'app/WebSocket/Middleware',
+        ],
         'wsController'   => [
             'suffix'      => 'Controller',
             'namespace'   => 'App\\WebSocket\\Controller',
@@ -138,8 +142,12 @@ class CodeGenerator
             'tplFilename' => 'tcp-controller',
             'outDir'      => 'app/Tpc/Controller',
         ],
-        // TODO tcpMiddleware
-        // 'tcpMiddleware'   => [],
+        'tcpMiddleware'  => [
+            'suffix'      => 'Middleware',
+            'namespace'   => 'App\\Tcp\\Middleware',
+            'tplFilename' => 'tcp-middleware',
+            'outDir'      => 'app/Tcp/Middleware',
+        ],
         'userProcess'    => [
             'suffix'      => 'Process',
             'namespace'   => 'App\\Process',
@@ -241,7 +249,7 @@ class CodeGenerator
         $info['tplFilename'] = $this->current['tplFilename'];
 
         // $out->writeln("Some Info: \n" . \json_encode($config, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
-        $out->writeln("Metadata: \n" . json_encode($info, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $out->writeln("<comment>Metadata:</comment> \n" . json_encode($info, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         if (!$saveDir = $in->getArg(1)) {
             $saveDir = $this->current['outDir'];
@@ -257,7 +265,7 @@ class CodeGenerator
         $file = $realpath . '/' . $this->tplData['className'] . '.php';
         $yes  = $in->sameOpt(['y', 'yes'], false);
 
-        $out->writeln("Target File:\n  <info>$file</info>\n");
+        $out->writeln("\nTarget File:\n  <info>$file</info>\n");
 
         // vdump($this->tplData);
         $renderer = new FileRenderer($this->current);
