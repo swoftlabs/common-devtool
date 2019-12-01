@@ -154,7 +154,7 @@ class NewCommand
      *
      * @example
      *   {fullCommand} demo -n 'My\Component'
-     *   {fullCommand} demo -n 'My\Component' -o vender/somedir
+     *   {fullCommand} demo -n 'My\Component' -o vendor/somedir
      */
     public function component(Input $input, Output $output): void
     {
