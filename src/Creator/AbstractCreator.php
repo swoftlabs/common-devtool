@@ -38,6 +38,11 @@ abstract class AbstractCreator
      */
     protected $onExecCmd;
 
+    /**
+     * @var callable
+     */
+    protected $onMessage;
+
     public static function new(array $config = [])
     {
         return new static($config);
@@ -73,6 +78,17 @@ abstract class AbstractCreator
     }
 
     /**
+     * @param string $msg
+     * @param array  $args
+     */
+    public function notifyMessage(string $msg, array $args = []): void
+    {
+        if ($cb = $this->onMessage) {
+            $cb($msg, $args);
+        }
+    }
+
+    /**
      * @param string $cmd
      *
      * @return boolean
@@ -83,7 +99,8 @@ abstract class AbstractCreator
 
         $ret = Coroutine::exec($cmd);
         if ((int)$ret['code'] !== 0) {
-            $msg         = $ret['output'];
+            $msg = $ret['output'];
+
             $this->error = 'exec command fail' . ($msg ? ': ' . $msg : '');
             return false;
         }
@@ -96,7 +113,7 @@ abstract class AbstractCreator
      *
      * @return void
      */
-    public function notifyCmdExec(string $cmd): void
+    protected function notifyCmdExec(string $cmd): void
     {
         if ($cb = $this->onExecCmd) {
             $cb($cmd);
@@ -142,7 +159,7 @@ abstract class AbstractCreator
     }
 
     /**
-     * Get new prject name
+     * Get new project name
      *
      * @return  string
      */
@@ -152,9 +169,9 @@ abstract class AbstractCreator
     }
 
     /**
-     * Set new prject name
+     * Set new project name
      *
-     * @param string $name new prject name
+     * @param string $name new project name
      *
      * @return  self
      */
@@ -165,5 +182,13 @@ abstract class AbstractCreator
         }
 
         return $this;
+    }
+
+    /**
+     * @param callable $onMessage
+     */
+    public function setOnMessage(callable $onMessage): void
+    {
+        $this->onMessage = $onMessage;
     }
 }

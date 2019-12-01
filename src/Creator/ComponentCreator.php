@@ -103,6 +103,7 @@ class ComponentCreator extends AbstractCreator
             return;
         }
 
+        $this->notifyMessage('Create component dir: ' . $path);
         Dir::make($path);
 
         $files  = [
@@ -140,7 +141,11 @@ class ComponentCreator extends AbstractCreator
             'escapePkgNamespace' => str_replace('\\', '\\\\', $this->namespace),
         ]);
 
+        $this->notifyMessage('Create directory structure and base files');
+
         $this->createFiles($renderer, $files);
+
+        $this->notifyMessage("Component: {$this->name} created(path: $path)");
     }
 
     protected function createFiles(FileRenderer $renderer, array $files): void
@@ -180,6 +185,7 @@ class ComponentCreator extends AbstractCreator
 
             if ($info['render'] ?? false) {
                 $renderer->setTplFile($tplFile);
+                /** @noinspection PhpUnhandledExceptionInspection */
                 $renderer->renderAs($dstFile);
             } else {
                 $this->writeFile($dstFile, $content);

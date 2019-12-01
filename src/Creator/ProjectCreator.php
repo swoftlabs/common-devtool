@@ -104,6 +104,9 @@ class ProjectCreator extends AbstractCreator
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function getInfo(): array
     {
         $info = [
@@ -130,6 +133,7 @@ class ProjectCreator extends AbstractCreator
             return;
         }
 
+        $this->notifyMessage('Begin create the new project: ' . $this->getName());
         $tmpDir = Sys::getTempDir() . '/swoft-app-demos';
         if (!file_exists($tmpDir)) {
             Dir::make($tmpDir, 0775);
@@ -148,23 +152,60 @@ class ProjectCreator extends AbstractCreator
         }
 
         if (!$hasExist) {
+            $this->notifyMessage('Clone Repo ' . $this->repoUrl);
+
             $cmd = "cd $tmpDir && git clone --depth 1 {$this->repoUrl}";
             if (!$this->exec($cmd)) {
                 return;
             }
         }
 
+        $this->notifyMessage('Copy project files from local cache');
+
+        $this->notifyMessage('Remove .git directory on new project');
         $cmd = "cp -R $dirPath $path && rm -rf {$path}/.git";
         if (!$this->exec($cmd)) {
             return;
         }
+
+        $this->notifyMessage("Project: $path created");
     }
 
+    /**
+     * install by composer
+     *
+     * @param bool $noDev
+     */
+    public function install(bool $noDev = false): void
+    {
+        $this->notifyMessage('Begin run composer install for init project');
+
+        $path = $this->projectPath;
+        $cmd  = "cd $path && composer install";
+
+        if ($noDev) {
+            $cmd .= ' --no-dev';
+        }
+
+        if (!$this->exec($cmd)) {
+            return;
+        }
+
+        $this->notifyMessage('Composer packages install complete');
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
     public function deleteDir(string $path): bool
     {
         if (strlen($path) < 6) {
             throw new InvalidArgumentException('path is to short, cannot exec rm', 500);
         }
+
+        $this->notifyMessage('Delete Dir: ' . $path);
 
         $cmd = "rm -rf $path";
         return $this->exec($cmd);

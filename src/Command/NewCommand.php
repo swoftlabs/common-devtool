@@ -9,6 +9,7 @@ use Swoft\Console\Annotation\Mapping\CommandOption;
 use Swoft\Console\Helper\Show;
 use Swoft\Console\Input\Input;
 use Swoft\Console\Output\Output;
+use SwoftLabs\Devtool\Creator\AbstractCreator;
 use SwoftLabs\Devtool\Creator\ComponentCreator;
 use SwoftLabs\Devtool\Creator\ProjectCreator;
 use function get_current_user;
@@ -52,6 +53,10 @@ class NewCommand
      *  "refresh", type="bool",
      *  desc="whether remove old tmp caches before create new application"
      * )
+     * @CommandOption(
+     *  "no-install", type="bool",
+     *  desc="dont run composer install after new application created"
+     * )
      * @CommandArgument("name", type="string", desc="the new application project name", mode=Command::ARG_REQUIRED)
      * @param Input  $input
      * @param Output $output
@@ -59,11 +64,12 @@ class NewCommand
      * @example
      *   {fullCommand} --type ws
      *   {fullCommand} --type tcp
-     *   {fullCommand} --repo https://github.com/UERANME/my-swoft-skeleton.git
+     *   {fullCommand} --repo https://github.com/UESRNAME/my-swoft-skeleton.git
      *
      * <info>Default template repos:</info>
      *
-     * TYPE   Github Repo URL
+     * TYPE   Github Repository URL
+     * -----|------------------------------------------------
      * http   https://github.com/swoft-cloud/swoft-http-project.git
      * tcp    https://github.com/swoft-cloud/swoft-tcp-project.git
      * rpc    https://github.com/swoft-cloud/swoft-rpc-project.git
@@ -81,23 +87,19 @@ class NewCommand
             'workDir' => $input->getWorkDir(),
         ]);
 
-        if ($input->boolOpt('debug')) {
-            $pcr->setOnExecCmd(function (string $cmd) {
-                Show::colored('> ' . $cmd, 'yellow');
-            });
-        }
+        $this->configCreator($pcr, $input->boolOpt('debug'));
+        $pcr->notifyMessage('Validate project information');
 
-        $pcr->validate();
-        if ($err = $pcr->getError()) {
-            $output->error($err);
+        if (!$pcr->validate()) {
+            $output->error($pcr->getError());
             return;
         }
 
         $yes = $input->sameOpt(['y', 'yes'], false);
-        $output->aList($pcr->getInfo(), 'information');
+        $output->aList($pcr->getInfo(), 'project information');
 
         if (file_exists($path = $pcr->getProjectPath())) {
-            if (!$yes && !$output->confirm('project has been exist! delete it', false)) {
+            if (!$yes && !$output->confirm('project has been exist! Delete and recreate it', false)) {
                 $output->colored('GoodBye!');
                 return;
             }
@@ -119,8 +121,19 @@ class NewCommand
             return;
         }
 
+        // composer install
+        if ($input->getBoolOpt('no-install')) {
+            $output->colored("\nCompleted!");
+            return;
+        }
+
+        $pcr->install();
+        if ($err = $pcr->getError()) {
+            $output->error($err);
+            return;
+        }
+
         $output->colored("\nCompleted!");
-        $output->colored("- Project: $path created");
     }
 
     /**
@@ -163,11 +176,7 @@ class NewCommand
             'noLicense' => $input->getBoolOpt('no-license'),
         ]);
 
-        if ($input->boolOpt('debug')) {
-            $ccr->setOnExecCmd(function (string $cmd) {
-                Show::colored('> ' . $cmd, 'yellow');
-            });
-        }
+        $this->configCreator($ccr, $input->boolOpt('debug'));
 
         if (!$ccr->validate()) {
             $output->error($ccr->getError());
@@ -203,6 +212,22 @@ class NewCommand
         }
 
         $output->colored("\nCompleted!");
-        $output->colored("Component: $name created(path: $path)");
+    }
+
+    /**
+     * @param AbstractCreator $creator
+     * @param bool            $debug
+     */
+    protected function configCreator(AbstractCreator $creator, bool $debug): void
+    {
+        if ($debug) {
+            $creator->setOnExecCmd(function (string $cmd) {
+                Show::colored('> ' . $cmd, 'yellow');
+            });
+        }
+
+        $creator->setOnMessage(function (string $msg) {
+            Show::colored('- ' . $msg);
+        });
     }
 }
