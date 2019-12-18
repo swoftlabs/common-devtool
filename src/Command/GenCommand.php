@@ -336,7 +336,7 @@ class GenCommand
      *
      * @CommandOption("namespace", short="n", desc="The class namespace", default="App\Listener")
      * @CommandOption("suffix", type="string", desc="The class name suffix", default="Listener")
-     * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="evt-listener.stub")
+     * @CommandOption("tpl-file", type="string", desc="The template filename or full path", default="event-listener.stub")
      * @param Input  $in
      * @param Output $out
      *
