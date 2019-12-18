@@ -73,13 +73,13 @@ class CodeGenerator
         'evtListener'    => [
             'suffix'      => 'Listener',
             'namespace'   => 'App\\Listener',
-            'tplFilename' => 'listener',
+            'tplFilename' => 'event-listener',
             'outDir'      => 'app/Listener',
         ],
         'cliCommand'     => [
             'suffix'      => 'Command',
             'namespace'   => 'App\\Command',
-            'tplFilename' => 'command',
+            'tplFilename' => 'cli-command',
             'outDir'      => 'app/Command',
         ],
         'task'           => [
