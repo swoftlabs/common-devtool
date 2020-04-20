@@ -2,12 +2,12 @@
 {include file="file-header.stub"}
 namespace {= namespace};
 
-use Swoft\App;
+use Swoft\Log\Helper\Log;
 // use Swoft\Bean\Annotation\Inject;
 // use Swoft\HttpClient\Client;
 // use Swoft\Rpc\Client\Bean\Annotation\Reference;
-use Swoft\Task\Bean\Annotation\Scheduled;
-use Swoft\Task\Bean\Annotation\Task;
+use Swoft\Task\Annotation\Mapping\Task;
+use Swoft\Crontab\Annotaion\Mapping\Scheduled;
 
 /**
  * Class {= className} - define some tasks
@@ -28,11 +28,10 @@ class {= className}
      */
     public function work(string $p1, string $p2)
     {
-        App::profileStart('co');
-        App::trace('trace');
-        App::info('info');
-        App::pushlog('key', 'stelin');
-        App::profileEnd('co');
+        Log::profileStart('co');
+        Log::info('info');
+        Log::pushlog('key', 'stelin');
+        Log::profileEnd('co');
 
         return 'o, task completed';
     }

@@ -23,6 +23,8 @@ use Swoole\WebSocket\Server;
  */
 class {= className}
 {
+    const HANDSHAKE_Ok = true;
+    
     /**
      * 在这里你可以验证握手的请求信息
      * - 必须返回含有两个元素的array
